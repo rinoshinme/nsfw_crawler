@@ -79,6 +79,6 @@ class SogouImageCrawler(object):
 
 
 if __name__ == "__main__":
-    crawler = SogouImageCrawler('./data')
+    crawler = SogouImageCrawler('./images')
     # crawler.crawl('拉横幅', 1000)
-    crawler.crawl_from_file('jobs/banner.json', multiprocess=False)
+    crawler.crawl_from_file('jobs/street.json', multiprocess=False)

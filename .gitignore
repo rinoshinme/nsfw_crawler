@@ -1,1 +1,17 @@
+# python cache
+__pycache__/
+*.pyc
+
+
+# general
 images/
+jobs/
+data/
+
+# manga
+image_data_fzdm/
+
+# rosi
+rosi_mm/
+disi_mm/
+data/
