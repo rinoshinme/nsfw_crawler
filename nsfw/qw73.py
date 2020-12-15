@@ -23,12 +23,18 @@ class QW73(object):
 			url = '{}/art/{}/index_{}.html'.format(self.homepage, self.category, idx)
 		return url
 
-	def run(self, save_folder, start=1, end=1291):
+	def run(self, start=1, end=1291):
 		main_urls = [self.get_page_url(i) for i in range(start, end)]
 		for i, page_url in enumerate(main_urls):
 			print('[PAGE]{}'.format(page_url))
 			set_info = self.get_set_info(page_url)
-			break
+			for href, title, date in set_info:
+				set_url = '{}{}'.format(self.homepage, href)
+				set_folder = os.path.join(self.save_folder, date, title)
+				if not os.path.exists(set_folder):
+					os.makedirs(set_folder)
+				print('[SET]{}'.format(title))
+				self.crawl_set(set_url, set_folder)
 	
 	def cleanup(self, save_folder, start=1, end=1291):
 		main_urls = [self.get_page_url(i) for i in range(start, end)]
@@ -55,21 +61,39 @@ class QW73(object):
 				href = item.a['href']
 				title = item.a['title']
 				date = item.a.span.text
-				print(href)
-				print(title)
-				print(date)
 				set_info.append((href, title, date))
 		except Exception as e:
 			print('error: ' + str(e))
 		return set_info
 	
-	def crawl_set(self, set_url):
-		pass
+	def crawl_set(self, set_url, set_folder):
+		try:
+			response = requests.get(set_url, headers=headers)
+			soup = BeautifulSoup(response.text, features='lxml')
+			img_content = soup.find(attrs={'id': 'tpl-img-content'})
+			for item in img_content.find_all('img'):
+				img_url = item['src']
+				filename = os.path.basename(img_url)
+				save_path = os.path.join(set_folder, filename)
+				if not os.path.exists(save_path):
+					print('[IMAGE]{}'.format(img_url))
+					self.download_image(img_url, save_path)
+		except Exception as e:
+			print('set error: ' + str(e))
 
 	def download_image(self, image_url, save_path):
-		pass
+		try:
+			# request.urlretrieve(url, save_path)
+			with open(save_path, 'wb') as f:
+				req = request.Request(image_url, headers=headers)
+				data = request.urlopen(req).read()
+				f.write(data)
+			return True
+		except Exception as e:
+			print('download error: ' + str(e))
+		return False
 
 
 if __name__ == '__main__':
 	crawler = QW73('./data')
-	crawler.run('./data')
+	crawler.run()
