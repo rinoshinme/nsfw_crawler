@@ -11,5 +11,6 @@ def generate_trainval(image_folder, categories, text_path):
             fpath = os.path.join(sub_folder, f)
 
 
+
 if __name__ == '__main__':
     pass
