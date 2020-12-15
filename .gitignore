@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 
+# mac files
+.DS_Store
+
 # temporary
 baidu/
 
