@@ -1,5 +1,11 @@
-# Image Data for Classification Task
+# Image Crawler
 
+# File Management
+1. deduplication
+2. file validation [check if an image file is valid]
+3. dataset generation
+
+# Dataset for classification task
 Example:
 20200915[tag]/
     cat/
@@ -12,8 +18,4 @@ Example:
     dog/
         images
 
-# tools
-1. deduplication
-2. file validation [check if an image file is valid]
-3. 
-
+# Dataset for detection task

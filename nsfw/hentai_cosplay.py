@@ -27,7 +27,7 @@ class HentaiCrawler(object):
         tags_item = soup.find(attrs={'id': 'tags'})
         for item in tags_item.find_all('li'):
             tag_url = item.a['href']
-            tag = tag_url.split('/')[-1]
+            tag = tag_url.split('/')[-2]
             if tag == '':
                 continue
             tags.append(tag)
@@ -121,7 +121,8 @@ class HentaiCrawler(object):
 
 
 if __name__ == '__main__':
-    crawler = HentaiCrawler()
+    crawler = HentaiCrawler(r'E:\data\porn\hentai_cosplay')
     # crawler.crawl_item('the-omega--the-acc--in-the-first-')
-    crawler.crawl_tag('cosplay')
+    crawler.crawl_tag('bikini')
     # tags = crawler.get_tags(1)
+    # print(tags)

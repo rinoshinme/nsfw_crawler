@@ -2,16 +2,15 @@
 __pycache__/
 *.pyc
 
+# temporary
+baidu/
 
-# general
-images/
+# job folders
 jobs/
-data/
 
-# manga
-image_data_fzdm/
-
-# rosi
+# dataset folders
 rosi_mm/
 disi_mm/
 data/
+image_data_fzdm/
+images/
