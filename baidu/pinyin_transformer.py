@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import pypinyin
 
 # 原文：https: // blog.csdn.net / r_coder / article / details / 79419318
