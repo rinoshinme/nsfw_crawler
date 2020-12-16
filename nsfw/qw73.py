@@ -35,20 +35,6 @@ class QW73(object):
 					os.makedirs(set_folder)
 				print('[SET]{}'.format(title))
 				self.crawl_set(set_url, set_folder)
-	
-	def cleanup(self, save_folder, start=1, end=1291):
-		main_urls = [self.get_page_url(i) for i in range(start, end)]
-		import shutil
-		for i, page_url in enumerate(main_urls):
-			set_info = self.get_set_info(page_url)
-			for _, title, date in set_info:
-				sub_folder = os.path.join(save_folder, title)
-				if os.path.exists(sub_folder):
-					# move into date folder
-					new_p = os.path.join(save_folder, date)
-					if not os.path.exists(new_p):
-						os.makedirs(new_p)
-					shutil.move(sub_folder, new_p)
 
 	def get_set_info(self, url):
 		set_info = []

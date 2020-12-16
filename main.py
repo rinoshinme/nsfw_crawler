@@ -14,7 +14,7 @@ def run():
     # crawler = HentaiCrawler('./data/hentai_crawler')
     # crawler.crawl_tag('naked')
     # crawler = Baidu('./data/baidu')
-    crawler = QW73('./data/qw73')
+    crawler = QW73(r'F:/data/porn/qw73')
     crawler.run()
 
 
