@@ -44,3 +44,18 @@ def rename_to_md5(file_path):
 
 def file_creation_time(file_path):
     pass
+
+
+def remove_empty_files(root_directory):
+    for root, dirs, files in os.walk(root_directory):
+        for f in files:
+            fpath = os.path.join(root, f)
+            fsize = os.path.getsize(fpath)
+            if fsize == 0:
+                print('[REMOVE]{}'.format(fpath))
+                os.remove(fpath)
+
+
+if __name__ == '__main__':
+    root = '/Users/liyu/Desktop/data/QW73/yazhoutupian'
+    remove_empty_files(root)

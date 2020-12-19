@@ -9,6 +9,9 @@ headers={'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:6
 
 class QW73(object):
 	def __init__(self, save_root, category='yazhoutupian'):
+		"""
+		category = qingchunweimei, meituisiwa,shunvluanlun
+		"""
 		self.homepage = 'http://www.73qw.com'
 		self.category = category
 		self.image_site_url = 'img6.26ts.com'
@@ -69,15 +72,15 @@ class QW73(object):
 
 	def download_image(self, image_url, save_path):
 		try:
-			# request.urlretrieve(url, save_path)
-			with open(save_path, 'wb') as f:
-				req = request.Request(image_url, headers=headers)
-				data = request.urlopen(req).read()
-				f.write(data)
-			return True
+			req = request.Request(image_url, headers=headers)
+			data = request.urlopen(req).read()
 		except Exception as e:
 			print('download error: ' + str(e))
-		return False
+			return 
+		# save data
+		if len(data) > 0:
+			with open(save_path, 'wb') as f:
+				f.write(data)
 
 
 if __name__ == '__main__':
