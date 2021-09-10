@@ -16,3 +16,5 @@ disi_mm/
 data/
 image_data_fzdm/
 images/
+
+*.json
