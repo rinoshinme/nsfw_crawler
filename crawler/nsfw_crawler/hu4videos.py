@@ -115,5 +115,5 @@ class Hu4Video(object):
 
 
 if __name__ == '__main__':
-    vid = Hu4Video('av', 'stym', save_path='4hulinks_stym.json')
+    vid = Hu4Video('movie', 'meiyan', save_path='4hulinks_meiyan.json')
     vid.run()

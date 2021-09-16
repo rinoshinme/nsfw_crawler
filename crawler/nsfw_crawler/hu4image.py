@@ -9,6 +9,7 @@ headers={'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:6
 
 def simplify_title(title):
     title = title.replace('?', '')
+    title = title.replace(':', '')
     return title
 
 
@@ -106,7 +107,6 @@ class FourHuImages(object):
 
 
 if __name__ == '__main__':
-    
-    crawler = FourHuImages('./4hu', 'meitu')
-
+    category = 'toupai'
+    crawler = FourHuImages('../../crawler_data/4hu/{}'.format(category), category)
     crawler.run()

@@ -25,6 +25,8 @@ class Hu4VideoDownloader(object):
                 continue
             
             print('downloading {}'.format(title))
+            if not os.path.exists(save_root):
+                os.makedirs(save_root)
             target_path = os.path.join(save_root, title)
             if os.path.exists(target_path):
                 continue
@@ -33,6 +35,7 @@ class Hu4VideoDownloader(object):
 
 if __name__ == '__main__':
     downloader = Hu4VideoDownloader()
-    database = downloader.load_urls('./4hulinks.json')
+    category = 'wuma'
+    database = downloader.load_urls('./4hulinks_{}.json'.format(category))
     # print(database)
-    downloader.run(database, '../../crawler_data/hu4_videos')
+    downloader.run(database, '../../crawler_data/hu4_videos/{}'.format(category))
