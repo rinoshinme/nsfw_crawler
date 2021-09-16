@@ -45,7 +45,7 @@ MAX_DOWNLOAD_COUNT = 5
 SHOULD_PUT_IN_SEPERATE_FOLDERS = True
 
 # Change the following list according to your requirements
-imageQueryList = ["FarCry 4", "GTA 6", "DMC", "Bayonetta"];
+imageQueryList = ["FarCry 4", "GTA 6", "DMC", "Bayonetta"]
 
 
 #don't chnage anything below

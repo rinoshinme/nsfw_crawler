@@ -1,15 +1,64 @@
-"""
-get video download links
-"""
-import requests
-from bs4 import BeautifulSoup
 import os
+import requests
 from urllib import request
-import time
+from bs4 import BeautifulSoup
 import json
+import wget
+
+from .base import BaseNSFWCrawler, HEADERS
 
 
-headers={'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/2.0.0.11'}
+class Hu4Image(BaseNSFWCrawler):
+    CATEGORIES = []
+
+    def __init__(self, category):
+        self.category = category
+        self.homepage = 'https://www.4huxx339.com/'
+        self.res_encoding = 'utf-8'
+    
+    def get_page_url(self, page_index):
+        if page_index == 1:
+            page_url = '{}/pic/{}'.format(self.homepage, self.category)
+        else:
+            page_url = '{}/pic/{}/index_{}.html'.format(self.homepage, self.category, page_index)
+        return page_url
+    
+    def get_page_info(self, page_url):
+        data = []
+        try:
+            response = requests.get(page_url, headers=HEADERS)
+            response.encoding = self.res_encoding
+            soup = BeautifulSoup(response.text, features='lxml')
+            items = soup.find_all('dl')
+            for item in items:
+                item = item.dd.a
+                title = item['title']
+                url = item['href']
+                url = self.homepage + url
+                data.append({
+                    'url': url, 
+                    'title': title
+                })
+        except Exception as e:
+            print('error: ' + str(e))
+        
+        return data
+    
+    def get_set_info(self, set_url):
+        image_urls = []
+        try:
+            response = requests.get(set_url, headers=HEADERS)
+            response.encoding = self.res_encoding
+            soup = BeautifulSoup(response.text, features='lxml')
+            container = soup.find(attrs={'class': 'pic'})
+
+            for d in container.find_all('img'):
+                image_urls.append(d['src'])
+
+        except Exception as e:
+            print('error: ' + str(e))
+        
+        return image_urls
 
 
 class Hu4Video(object):
@@ -40,7 +89,7 @@ class Hu4Video(object):
 
         data = []
         try:
-            response = requests.get(page_url, headers=headers)
+            response = requests.get(page_url, headers=HEADERS)
             response.encoding = self.res_encoding
             soup = BeautifulSoup(response.text, features='lxml')
             items = soup.find_all('dl')
@@ -66,7 +115,7 @@ class Hu4Video(object):
     def get_link(self, video_url):
         links = []
         try:
-            response = requests.get(video_url, headers=headers)
+            response = requests.get(video_url, headers=HEADERS)
             response.encoding = self.res_encoding
             soup = BeautifulSoup(response.text, features='lxml')
             items = soup.find_all(attrs={'class': 'download'})
@@ -114,6 +163,33 @@ class Hu4Video(object):
                 print(str(e))
 
 
-if __name__ == '__main__':
-    vid = Hu4Video('movie', 'meiyan', save_path='4hulinks_meiyan.json')
-    vid.run()
+class Hu4VideoDownloader(object):
+    def __init__(self):
+        pass
+
+    def load_urls(self, json_path):
+        with open(json_path, 'r', encoding='utf-8') as f:
+            database = json.loads(f.read())
+        return database
+
+    def download_video(self, video_url, video_path):
+        file_path = wget.download(video_url, out=video_path)
+        return file_path
+
+    def run(self, json_path, save_root):
+        dataset = self.load_urls(json_path)
+        for idx, (title, urls) in enumerate(dataset.items()):
+            if len(urls) == 0:
+                continue
+            video_url = urls[0]
+            if 'thunder' in video_url:
+                continue
+            
+            print('downloading {}'.format(title))
+            if not os.path.exists(save_root):
+                os.makedirs(save_root)
+            target_path = os.path.join(save_root, title)
+            if os.path.exists(target_path):
+                continue
+
+            self.download_video(video_url, target_path)
