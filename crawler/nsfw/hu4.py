@@ -31,14 +31,18 @@ class Hu4Image(BaseNSFWCrawler):
             soup = BeautifulSoup(response.text, features='lxml')
             items = soup.find_all('dl')
             for item in items:
-                item = item.dd.a
-                title = item['title']
-                url = item['href']
-                url = self.homepage + url
-                data.append({
-                    'url': url, 
-                    'title': title
-                })
+                try:
+                    item = item.dd.a
+                    title = item['title']
+                    url = item['href']
+                    url = self.homepage + url
+                    data.append({
+                        'url': url, 
+                        'title': title
+                    })
+                except Exception as ee:
+                    print('error: ' + str(ee))
+                    
         except Exception as e:
             print('error: ' + str(e))
         

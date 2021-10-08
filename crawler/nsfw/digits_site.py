@@ -1,8 +1,5 @@
 """
-BaseNSFWCrawler is an 2-level image crawler.
-    Given a page index, with homepage and category, page url is generated. In each 
-    page, a set of urls for image series is generated. Each image serie url contains a set of 
-    image urls, download each url into a separate folder, and all done.
+2345678av.com
 """
 
 import requests
@@ -10,23 +7,67 @@ from bs4 import BeautifulSoup
 import os
 from urllib import request
 import time
+from .base import HEADERS
 
 
-HEADERS = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/2.0.0.11'}
+CATEGORY_MAP = {
+    'base': 'list-39-2120-{}.html'
+}
 
 
-class BaseNSFWCrawler(object):
-    def __init__(self):
-        pass
+class DigitsSite(object):
+    CATEGORIES = []
+
+    def __init__(self, category):
+        self.category = category
+        self.page_suffix = CATEGORY_MAP[self.category]
+        self.homepage = 'https://www.2345678av.com/'
+        self.res_encoding = 'GB2312'
     
     def get_page_url(self, page_index):
-        raise NotImplementedError
+        page_url = '{}{}'.format(self.homepage, self.page_suffix.format(page_index))
+        return page_url
     
     def get_page_info(self, page_url):
-        raise NotImplementedError
-
+        data = []
+        try:
+            response = requests.get(page_url, headers=HEADERS)
+            response.encoding = self.res_encoding
+            soup = BeautifulSoup(response.text, features='lxml')
+            container = soup.find(attrs={'class', 'appel'})
+            items = container.find_all('li')
+            for item in items:
+                try:
+                    title = item.a.text
+                    url = item.a['href']
+                    url = self.homepage + url
+                    data.append({
+                        'url': url, 
+                        'title': title
+                    })
+                except Exception as ee:
+                    print('error: ' + str(ee))
+                    
+        except Exception as e:
+            print('error: ' + str(e))
+        
+        return data
+    
     def get_set_info(self, set_url):
-        raise NotImplementedError
+        image_urls = []
+        try:
+            response = requests.get(set_url, headers=HEADERS)
+            response.encoding = self.res_encoding
+            soup = BeautifulSoup(response.text, features='lxml')
+            container = soup.find(attrs={'class': 'ttnr'})
+
+            for d in container.find_all('img'):
+                image_urls.append(d['src'])
+
+        except Exception as e:
+            print('error: ' + str(e))
+        
+        return image_urls
     
     def download_image(self, image_url, image_path):
         try:
@@ -49,6 +90,8 @@ class BaseNSFWCrawler(object):
             print('[Page] {}'.format(current))
             page_url = self.get_page_url(current)
             set_data = self.get_page_info(page_url)
+            # print(set_data)
+
             for info in set_data:
                 set_url = info['url']
                 title = info['title']
@@ -65,6 +108,7 @@ class BaseNSFWCrawler(object):
                         print('[Image] {}'.format(imgurl))
                         self.download_image(imgurl, save_path)
                         time.sleep(0.1)
+
             current += 1
             if end > 0 and current > end:
                 break

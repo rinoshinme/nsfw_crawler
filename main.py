@@ -10,15 +10,16 @@ Run image crawler
 # from normal.baidu import Baidu
 import os
 from crawler.nsfw import Hu4Image, Hu4Video, Hu4VideoDownloader
+from crawler.nsfw import DigitsSite
 
 
 ROOT_DIR = r'F:\Data\crawler_data'
 
 
 def test_hu4():
-    category = 'meitui'
+    category = 'toupai'
     crawler = Hu4Image(category)
-    crawler.run(os.path.join(ROOT_DIR, 'hu4', category))
+    crawler.run(os.path.join(ROOT_DIR, 'hu4', category), start=5)
 
 
 def test_hu4video():
@@ -35,6 +36,12 @@ def test_hu4video():
     downloader.run(json_path, video_folder)
 
 
+def test_digits():
+    category = 'base'
+    crawler = DigitsSite(category)
+    crawler.run(os.path.join(ROOT_DIR, 'digits'))
+
+
 def run():
     # crawler = HentaiCrawler('./data/hentai_crawler')
     # crawler.crawl_tag('naked')
@@ -43,7 +50,8 @@ def run():
     # crawler.run()
 
     # test_hu4()
-    test_hu4video()
+    # test_hu4video()
+    test_digits()
 
 
 if __name__ == '__main__':

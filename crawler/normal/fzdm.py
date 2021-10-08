@@ -53,14 +53,14 @@ def download_page(page_url, save_path_template):
 
 def download_image(image_url, save_path):
 	try:
-		resp = request.Request(url, headers=headers)
+		resp = request.Request(image_url, headers=headers)
 		resp = request.urlopen(resp)
 		data = resp.read()
 		with open(save_path, 'wb') as f:
 			f.write(data)
 	except Exception as e:
 		print(e)
-		print('{} not downloaded'.format(url))
+		print('{} not downloaded'.format(image_url))
 	
 	time.sleep(0.1)
 
