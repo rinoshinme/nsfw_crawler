@@ -68,3 +68,11 @@ class BaseNSFWCrawler(object):
             current += 1
             if end > 0 and current > end:
                 break
+
+
+class MultiProcessWrapper(object):
+    """
+    TODO: 
+    """
+    def __init__(self):
+        pass

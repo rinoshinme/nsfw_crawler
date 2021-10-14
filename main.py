@@ -9,6 +9,8 @@ Run image crawler
 # Python2 env
 # from normal.baidu import Baidu
 import os
+import random
+import multiprocessing
 from crawler.nsfw import Hu4Image, Hu4Video, Hu4VideoDownloader
 from crawler.nsfw import DigitsSite
 
@@ -36,10 +38,20 @@ def test_hu4video():
     downloader.run(json_path, video_folder)
 
 
-def test_digits():
-    category = 'base'
+def download_digits(category):
+    # category = 'beauty'
     crawler = DigitsSite(category)
-    crawler.run(os.path.join(ROOT_DIR, 'digits'))
+    crawler.run(os.path.join(ROOT_DIR, 'digits', category))
+
+
+def test_digits_mp():
+    nprocesses = 20
+    categories = ['beauty', 'asian', 'hentai', 'basic', 'body', 
+                  'highheel', 'network']
+    for i in range(nprocesses):
+        category = categories[i % len(categories)]
+        t = multiprocessing.Process(target=download_digits, args=(category, ))
+        t.start()
 
 
 def run():
@@ -51,9 +63,8 @@ def run():
 
     # test_hu4()
     # test_hu4video()
-    test_digits()
+    test_digits_mp()
 
 
 if __name__ == '__main__':
     run()
-

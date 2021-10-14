@@ -8,10 +8,18 @@ import os
 from urllib import request
 import time
 from .base import HEADERS
+import random
 
 
 CATEGORY_MAP = {
-    'base': 'list-39-2120-{}.html'
+    'basic': 'list-39-2120-{}.html',
+    'network': 'list-40-2081-{}.html',
+    'asian': 'list-41-2106-{}.html',
+    'western': 'list-42-1837-{}.html', 
+    'body': 'list-43-2027-{}.html',
+    'highheel': 'list-44-2144-{}.html', 
+    'hentai': 'list-45-2060-{}.html', 
+    'beauty': 'list-46-2066-{}.html'
 }
 
 
@@ -84,13 +92,15 @@ class DigitsSite(object):
         title = title.replace('?', '').replace(':', '').replace('|', '')
         return title
 
-    def run(self, save_root, start=1, end=-1):
+    def run(self, save_root, start=1, end=-1, shuffle=True):
         current = start
         while True:
             print('[Page] {}'.format(current))
             page_url = self.get_page_url(current)
             set_data = self.get_page_info(page_url)
             # print(set_data)
+            if shuffle:
+                random.shuffle(set_data)
 
             for info in set_data:
                 set_url = info['url']
