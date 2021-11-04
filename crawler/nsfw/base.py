@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import os
 from urllib import request
 import time
+import random
 
 
 HEADERS = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/2.0.0.11'}
@@ -41,14 +42,17 @@ class BaseNSFWCrawler(object):
     
     def title_simplify(self, title):
         title = title.replace('?', '').replace(':', '').replace('|', '')
+        title = title.replace('“', '').replace('”', '')
         return title
 
-    def run(self, save_root, start=1, end=-1):
+    def run(self, save_root, start=1, end=-1, shuffle=True):
         current = start
         while True:
             print('[Page] {}'.format(current))
             page_url = self.get_page_url(current)
             set_data = self.get_page_info(page_url)
+            if shuffle:
+                random.shuffle(set_data)
             for info in set_data:
                 set_url = info['url']
                 title = info['title']

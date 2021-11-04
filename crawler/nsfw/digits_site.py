@@ -90,6 +90,7 @@ class DigitsSite(object):
     
     def title_simplify(self, title):
         title = title.replace('?', '').replace(':', '').replace('|', '')
+        title = title.replace('“', '').replace('”', '')
         return title
 
     def run(self, save_root, start=1, end=-1, shuffle=True):

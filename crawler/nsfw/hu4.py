@@ -66,6 +66,14 @@ class Hu4Image(BaseNSFWCrawler):
 
 
 class Hu4Video(object):
+    HU4_VIDEO_CATEGORIES = {
+        'video': ['zipai', 'fuqi', 'kaifang', 'jingpin', 
+                  'twmm', 'krzb', 'dongman', 'sanji'],
+        'av': ['nxx', 'bdyjy', 'stym', 'qbyc', 
+               'cjk', 'shyy', 'thy', 'jzmb'],
+        'movie': ['wuma', 'sm', 'gaoqing', 'shunv', 
+                  'meiyan', 'siwa', 'youma', 'oumei'],
+    }
     def __init__(self, category_major, category_minor, save_path='4hulinks.json'):
         self.category_major = category_major
         self.category_minor = category_minor

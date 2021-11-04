@@ -3,37 +3,45 @@ from bs4 import BeautifulSoup
 import os
 from urllib import request
 import time
+import random
 
 headers={'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/2.0.0.11'}
 
+HOMEPAGE = 'http://www.369mv.com'
+
 
 class QW73(object):
-	def __init__(self, save_root, category='yazhoutupian'):
+	def __init__(self, category='yazhoutupian'):
 		"""
 		category = qingchunweimei, meituisiwa,shunvluanlun
 		"""
-		self.homepage = 'http://www.73qw.com'
+		self.homepage = HOMEPAGE
 		self.category = category
-		self.image_site_url = 'img6.26ts.com'
+		# self.image_site_url = 'img6.26ts.com'
 		self.res_encoding = 'utf8'
-		self.save_root = save_root
-		self.save_folder = os.path.join(self.save_root, self.category)
+		# self.save_root = save_root
+		# self.save_folder = os.path.join(self.save_root, self.category)
 	
 	def get_page_url(self, idx):
 		if idx == 1:
-			url = '{}/art/{}'.format(self.homepage, self.category)
+			url = '{}/art/{}/index.html'.format(self.homepage, self.category)
 		else:
 			url = '{}/art/{}/index_{}.html'.format(self.homepage, self.category, idx)
 		return url
 
-	def run(self, start=1, end=1291):
+	def run(self, save_root, shuffle=True, start=1, end=2802):
+		save_folder = os.path.join(save_root, self.category)
+		
 		main_urls = [self.get_page_url(i) for i in range(start, end)]
 		for i, page_url in enumerate(main_urls):
 			print('[PAGE]{}'.format(page_url))
 			set_info = self.get_set_info(page_url)
+			if shuffle:
+				random.shuffle(set_info)
+
 			for href, title, date in set_info:
 				set_url = '{}{}'.format(self.homepage, href)
-				set_folder = os.path.join(self.save_folder, date, title)
+				set_folder = os.path.join(save_folder, date, title)
 				if not os.path.exists(set_folder):
 					os.makedirs(set_folder)
 				print('[SET]{}'.format(title))
@@ -60,6 +68,8 @@ class QW73(object):
 			response = requests.get(set_url, headers=headers)
 			soup = BeautifulSoup(response.text, features='lxml')
 			img_content = soup.find(attrs={'id': 'tpl-img-content'})
+			if img_content is None:
+				return
 			for item in img_content.find_all('img'):
 				img_url = item['src']
 				filename = os.path.basename(img_url)
@@ -71,6 +81,7 @@ class QW73(object):
 			print('set error: ' + str(e))
 
 	def download_image(self, image_url, save_path):
+		image_url = image_url.replace('https', 'http')
 		try:
 			req = request.Request(image_url, headers=headers)
 			data = request.urlopen(req).read()

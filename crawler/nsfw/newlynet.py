@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import os
 from urllib import request
 import time
+import random
+
 
 headers={'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/2.0.0.11'}
 
@@ -71,10 +73,12 @@ class NewlyNet(object):
             print('error: ' + str(e))
         return None
 
-    def run(self):
+    def run(self, shuffle=True):
         for i in range(4, 100):
             print('downloading page {}'.format(i))
             data = self.get_page_info(i)
+            if shuffle:
+                random.shuffle(data)
             for d in data:
                 set_url = d['url']
                 title = d['title']
@@ -111,5 +115,6 @@ class NewlyNet(object):
 
 
 if __name__ == '__main__':
-    crawler = NewlyNet('./newly')
+    download_dir = r'F:/Data/crawler_data/newly'
+    crawler = NewlyNet(download_dir)
     crawler.run()
