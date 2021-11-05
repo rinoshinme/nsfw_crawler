@@ -4,6 +4,7 @@ from urllib import request
 from bs4 import BeautifulSoup
 import json
 import wget
+import random
 
 from .base import BaseNSFWCrawler, HEADERS
 
@@ -68,9 +69,9 @@ class Hu4Image(BaseNSFWCrawler):
 class Hu4Video(object):
     HU4_VIDEO_CATEGORIES = {
         'video': ['zipai', 'fuqi', 'kaifang', 'jingpin', 
-                  'twmm', 'krzb', 'dongman', 'sanji'],
+                  'twmn', 'krzb', 'dongman', 'sanji'],
         'av': ['nxx', 'bdyjy', 'stym', 'qbyc', 
-               'cjk', 'shyy', 'thy', 'jzmb'],
+               'cjk', 'ssyy', 'thy', 'jzmb'],
         'movie': ['wuma', 'sm', 'gaoqing', 'shunv', 
                   'meiyan', 'siwa', 'youma', 'oumei'],
     }
@@ -187,6 +188,12 @@ class Hu4VideoDownloader(object):
     def download_video(self, video_url, video_path):
         file_path = wget.download(video_url, out=video_path)
         return file_path
+    
+    def title_simplify(self, title):
+        title = title.replace('?', '').replace(':', '').replace('|', '')
+        title = title.replace('“', '').replace('”', '').replace(' ', '')
+        title = title.replace('/', '')
+        return title
 
     def run(self, json_path, save_root):
         dataset = self.load_urls(json_path)
@@ -197,11 +204,18 @@ class Hu4VideoDownloader(object):
             if 'thunder' in video_url:
                 continue
             
-            print('downloading {}'.format(title))
+            # print('downloading {}'.format(title))
             if not os.path.exists(save_root):
                 os.makedirs(save_root)
-            target_path = os.path.join(save_root, title)
+            
+            ext = video_url.split('.')[-1]
+            title = self.title_simplify(title)
+            target_path = os.path.join(save_root, '{}.{}'.format(title, ext))
             if os.path.exists(target_path):
                 continue
 
+            # try:
+            print('\ndownloading {}\n =====>{}'.format(video_url, target_path))
             self.download_video(video_url, target_path)
+            # except Exception as e:
+            #     print('download failed: ' + str(e))

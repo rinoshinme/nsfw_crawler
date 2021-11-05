@@ -46,12 +46,13 @@ def download_hu4video(category_major, category_minor):
     vid_crawler.run()
 
 
-def download_hu4video_real(json_path, video_folder):
+def download_hu4video_real(name):
     """
     download video files.
     """
+    json_path = os.path.join(ROOT_DIR, 'hu4video', '{}.json'.format(name))
     downloader = Hu4VideoDownloader()
-    video_folder = os.path.join(ROOT_DIR, 'hu4video', 'movie_meiyan')
+    video_folder = os.path.join(ROOT_DIR, 'hu4video', name)
     if not os.path.exists(video_folder):
         os.makedirs(video_folder)
     downloader.run(json_path, video_folder)
@@ -112,9 +113,10 @@ def run():
     # download_qw73('yazhoutupian')
 
     # test_hu4_mp()
-    test_hu4video_mp()
     # test_digits_mp()
     # test_qw73_mp()
+    # test_hu4video_mp()
+    download_hu4video_real('av_qbyc')
 
 
 if __name__ == '__main__':
