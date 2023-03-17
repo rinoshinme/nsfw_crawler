@@ -81,6 +81,8 @@ class QW73(object):
 			print('set error: ' + str(e))
 
 	def download_image(self, image_url, save_path):
+		if os.path.exists(save_path):
+			return
 		image_url = image_url.replace('https', 'http')
 		try:
 			req = request.Request(image_url, headers=headers)

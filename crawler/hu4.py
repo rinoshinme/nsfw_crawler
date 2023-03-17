@@ -75,10 +75,10 @@ class Hu4Video(object):
         'movie': ['wuma', 'sm', 'gaoqing', 'shunv', 
                   'meiyan', 'siwa', 'youma', 'oumei'],
     }
-    def __init__(self, category_major, category_minor, save_path='4hulinks.json'):
+    def __init__(self, category_major, category_minor='', save_path='4hulinks.json'):
         self.category_major = category_major
         self.category_minor = category_minor
-        self.homepage = 'https://www.4huxx339.com/'
+        self.homepage = 'https://www.b6q44.com/'
         self.res_encoding = 'utf-8'
         self.save_path = save_path
     
@@ -90,15 +90,29 @@ class Hu4Video(object):
         return database
     
     def save_links(self, database):
+        save_dir = os.path.dirname(self.save_path)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        
         with open(self.save_path, 'w', encoding='utf-8') as f:
             data = json.dumps(database, indent=4)
             f.write(data)
 
-    def get_page_info(self, page_index):
-        if page_index == 1:
-            page_url = '{}/{}/{}'.format(self.homepage, self.category_major, self.category_minor)
+    def get_page_url(self, page_index):
+        if self.category_minor != '':
+            if page_index == 1:
+                page_url = '{}/{}/{}'.format(self.homepage, self.category_major, self.category_minor)
+            else:
+                page_url = '{}/{}/{}/index_{}.html'.format(self.homepage, self.category_major, self.category_minor, page_index)
         else:
-            page_url = '{}/{}/{}/index_{}.html'.format(self.homepage, self.category_major, self.category_minor, page_index)
+            if page_index == 1:
+                page_url = '{}/{}'.format(self.homepage, self.category_major)
+            else:
+                page_url = '{}/{}/index_{}.html'.format(self.homepage, self.category_major, page_index)
+        return page_url
+
+    def get_page_info(self, page_index):
+        page_url = self.get_page_url(page_index)
 
         data = []
         try:
@@ -214,8 +228,8 @@ class Hu4VideoDownloader(object):
             if os.path.exists(target_path):
                 continue
 
-            # try:
-            print('\ndownloading {}\n =====>{}'.format(video_url, target_path))
-            self.download_video(video_url, target_path)
-            # except Exception as e:
-            #     print('download failed: ' + str(e))
+            try:
+                print('\ndownloading {}\n =====>{}'.format(video_url, target_path))
+                self.download_video(video_url, target_path)
+            except Exception as e:
+                print('download failed: ' + str(e))

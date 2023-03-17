@@ -11,14 +11,14 @@ Run image crawler
 import os
 import random
 import multiprocessing
-from crawler.nsfw import Hu4Image, Hu4Video, Hu4VideoDownloader
-from crawler.nsfw import DigitsSite
-from crawler.nsfw import QW73
+from crawler import Hu4Image, Hu4Video, Hu4VideoDownloader
+from crawler import DigitsSite
+from crawler import QW73
 
 
-ROOT_DIR = r'F:\Data\crawler_data'
-
-
+# ROOT_DIR = r'F:\Data\crawler_data'
+# ROOT_DIR = r'G:\crawler_data'
+ROOT_DIR = 'F:/Data/NSFW'
 # -------------------------------------------------------------------
 # basic downloaders
 def download_hu4(category):
@@ -35,7 +35,7 @@ def download_digits(category):
 
 def download_qw73(category):
     crawler = QW73(category)
-    crawler.run(os.path.join(ROOT_DIR, 'mv369'))
+    crawler.run(os.path.join(ROOT_DIR, 'mv369'), start=1)
 
 
 def download_hu4video(category_major, category_minor):
@@ -106,17 +106,23 @@ def test_hu4video_mp():
         t.start()
 
 
+def test_hu4video_av():
+    # download_hu4video('av', '')
+    download_hu4video('video', '')
+
+
 def run():
     # crawler = HentaiCrawler('./data/hentai_crawler')
     # crawler.crawl_tag('naked')
     # crawler = Baidu('./data/baidu')
-    # download_qw73('yazhoutupian')
+    download_qw73('yazhoutupian')
 
     # test_hu4_mp()
     # test_digits_mp()
     # test_qw73_mp()
     # test_hu4video_mp()
-    download_hu4video_real('av_qbyc')
+    # test_hu4video_av()
+    # download_hu4video_real('video_')
 
 
 if __name__ == '__main__':
